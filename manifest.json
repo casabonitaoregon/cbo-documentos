@@ -1,0 +1,19 @@
+{
+  "name": "CBO Documentos",
+  "short_name": "CBO Documentos",
+  "description": "Documentos de seguridad y salud en el trabajo de Casa Bonita Oregón S.A.C.",
+  "id": "./?app=cbo-documentos",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4EDE0",
+  "theme_color": "#0D5C46",
+  "lang": "es-PE",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
