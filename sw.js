@@ -1,15 +1,15 @@
 // CBO Documentos — service worker: app sin internet y documentos guardados en el celular
-const VERSION = "cbo-documentos-v3";
+const VERSION = "cbo-documentos-v4";
 const SHELL = [
-  "./", "index.html", "manifest.json", "docs/catalogo.js",
-  "icon-192.png", "icon-512.png", "apple-touch-icon.png", "logo-verde.png", "logo-beige.png", "logo-blanco.png",
+  "./", "index.html", "app.webmanifest", "docs/catalogo.js",
+  "app-icon-192.png", "app-icon-512.png", "app-maskable-192.png", "app-maskable-512.png", "app-apple-touch-icon.png", "logo-verde.png", "logo-beige.png", "logo-blanco.png",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
 ];
 const DOCS = "cbo-documentos-archivos";
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: "reload" })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {
@@ -33,15 +33,15 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // Página y catálogo: primero internet (para tener lo último); sin internet, lo guardado
-  if (url.origin === location.origin && (req.mode === "navigate" || url.pathname.endsWith("catalogo.js"))) {
-    e.respondWith(fetch(req).then((res) => {
+  // Página, catálogo, manifiesto e íconos: primero internet (para tener lo último); sin internet, lo guardado
+  if (url.origin === location.origin && (req.mode === "navigate" || /(catalogo\.js|\.webmanifest|manifest\.json|(icon|maskable)[^/]*.png)$/.test(url.pathname))) {
+    e.respondWith(fetch(req.url, { cache: "no-cache" }).then((res) => {
       const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); return res;
     }).catch(() => caches.match(req, { ignoreSearch: true }).then((r) => r || caches.match("index.html"))));
     return;
   }
 
-  // Lo demás (íconos, letras, visor de PDF): lo guardado primero
+  // Lo demás (logos, letras, visor de PDF): lo guardado primero
   e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((res) => {
     if (res.ok && (url.origin === location.origin || /cdnjs|gstatic|googleapis/.test(url.host))) {
       const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy));
