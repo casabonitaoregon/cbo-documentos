@@ -1,5 +1,5 @@
 // CBO Documentos — service worker: app sin internet y documentos guardados en el celular
-const VERSION = "cbo-documentos-v2";
+const VERSION = "cbo-documentos-v3";
 const SHELL = [
   "./", "index.html", "manifest.json", "docs/catalogo.js",
   "icon-192.png", "icon-512.png", "apple-touch-icon.png", "logo-verde.png", "logo-beige.png", "logo-blanco.png",
